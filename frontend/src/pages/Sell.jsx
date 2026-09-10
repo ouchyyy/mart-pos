@@ -58,10 +58,13 @@ export default function Sell() {
   function groupByCategory(list) {
     const groups = [];
 
-    // Everything marked down goes in its own row at the top.
-    // A cashier should be nudged to shift the short-dated stock
-    // first, and hunting for it inside its usual category is the
-    // opposite of a nudge.
+    // Everything marked down also gets its own row at the top, so
+    // a cashier is nudged to shift the short-dated stock first.
+    //
+    // "Also" is the point: the product stays on its normal shelf
+    // as well. A real shop puts offers on an end-cap without
+    // emptying the aisle they came from, and a cashier looking
+    // under Snacks for a Kit Kat should find one there.
     const onOffer = list.filter((product) => product.clearance_percent > 0);
 
     if (onOffer.length > 0) {
@@ -80,11 +83,6 @@ export default function Sell() {
     groups.push({ name: 'No category', products: [] });
 
     for (const product of list) {
-      // Already shown in the discounts row above.
-      if (product.clearance_percent > 0) {
-        continue;
-      }
-
       const name = product.category_name || 'No category';
       let group = groups.find((g) => g.name === name);
 
