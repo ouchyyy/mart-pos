@@ -291,18 +291,13 @@ td {
   overflow: hidden;
 }
 
-/* Each side scrolls on its own. A long product list must not push
-   the Charge button off the bottom of the screen — at a till that
-   button has to be in the same place every time.
+/* The products scroll on their own, and keep clear of the pinned
+   cart with a margin the same width.
 
    min-width: 0 is the important line. A flex item refuses to
    shrink below the width of its content by default, so one long
    row of products was making this column wider than the space
-   available and shoving the cart off the screen. Setting it to 0
-   lets the column stay where it is and the row scroll inside it
-   instead. */
-/* The products keep clear of the pinned cart with a margin the
-   same width, so nothing ever ends up underneath it. */
+   available and shoving the cart off the screen. */
 .sell-left {
   flex: 1;
   min-width: 0;
@@ -355,9 +350,6 @@ td {
   align-items: stretch;
 }
 
-/* A fixed height so every tile matches, with or without a
-   discount badge. Ragged tile heights make a grid hard to scan,
-   and scanning it quickly is the whole job. */
 /* Picture, then the name, badge and price packed straight under
    it. No fixed height and nothing pushed to the bottom, so a tile
    is only as tall as what is in it and reads as one block.
@@ -501,9 +493,7 @@ td {
   line-height: 1.15;
 }
 
-/* Dollars and riel stacked, same size. 26px rather than the old
-   32px so the longer riel figure still fits the panel without
-   wrapping. */
+/* Dollars and riel stacked, the same size as each other. */
 .total-amounts {
   display: flex;
   flex-direction: column;
@@ -776,11 +766,8 @@ td {
 }
 
 .pay-choice button {
-  padding: 7px 10px;
-}
-
-.pay-choice button {
   flex: 1;
+  padding: 7px 10px;
 }
 
 .pay-choice button.chosen {
@@ -1217,7 +1204,7 @@ td {
   width: 42px;
   height: 42px;
   flex-shrink: 0;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 3px;
 }
 
@@ -1252,27 +1239,18 @@ td {
 
 /* ---------- product pictures on the till ---------- */
 
-/* A fixed height rather than a square. A square photo pushed the
-   name and price down the tile and meant fewer products fitted
-   on screen — and at a till, seeing more products at once matters
-   more than seeing each one large.
-   "contain" fits the whole product in instead of cropping it,
-   because half a coffee jar looks like any other half a jar. */
-/* Every photo the same size, filling the same box.
-   "cover" scales the picture until it fills the space and trims
-   whatever hangs over, so a tall bottle and a wide crisp packet
-   end up looking the same size on the shelf. "contain" would fit
-   each one whole, but then a bottle looks tiny beside a packet
-   and the row reads as untidy.
-   The trade is that very tall products lose a little top and
-   bottom. Change "cover" to "contain" below if you would rather
-   see every product whole. */
+/* Same box for every product, and the whole product inside it.
+   "contain" shrinks the picture until it fits, so a tall bottle
+   and a wide packet both show completely — nothing is cropped.
+   No background behind it, so the space a tall thin product
+   leaves at its sides just blends into the tile instead of being
+   outlined as a grey rectangle. That grey box was what made the
+   photos look like they were floating in wasted space. */
 .product-photo {
   width: 100%;
   height: 78px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  border-radius: 3px;
   padding: 0;
   margin-bottom: 6px;
   display: block;
@@ -1296,8 +1274,8 @@ td {
 /* ---------- clearance on short-dated stock ---------- */
 
 /* Amber rather than red: this is an opportunity to sell
-   something, not a problem to fix. Red is for out of stock. */
-/* Sits between the name and the price, with a little room on
+   something, not a problem to fix. Red is for out of stock.
+   Sits between the name and the price, with a little room on
    both sides so it does not look wedged in. Only as wide as its
    own words, so it cannot stretch the tile. */
 .clearance-badge {
@@ -1390,9 +1368,6 @@ td {
   color: var(--grey);
   padding: 14px 2px;
 }
-
-
-
 
 
 /* ---------- filter chips ---------- */
@@ -1554,9 +1529,8 @@ td {
   width: 64px;
   height: 64px;
   flex-shrink: 0;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 4px;
-  background: #f7f8fa;
 }
 
 .customer-photo.missing {
