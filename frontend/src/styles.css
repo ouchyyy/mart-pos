@@ -1271,7 +1271,11 @@ td {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
+
+  /* Firefox. The two colours are thumb then track. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey) #dfe4ea;
 }
 
 .category-scroller .product-button {
@@ -1279,16 +1283,52 @@ td {
   flex-shrink: 0;
 }
 
-/* A thin scrollbar, visible enough to show there is more to see. */
+/* The scrollbar needs to be obvious, not tasteful. A cashier who
+   cannot tell a row continues will never look, and the products
+   off the right edge may as well not be in the shop.
+   So: a visible track, a dark thumb, and both on show at all
+   times rather than appearing on hover. */
 .category-scroller::-webkit-scrollbar {
-  height: 7px;
+  height: 10px;
+}
+
+.category-scroller::-webkit-scrollbar-track {
+  background: #dfe4ea;
+  border-radius: 5px;
 }
 
 .category-scroller::-webkit-scrollbar-thumb {
-  background: var(--line);
-  border-radius: 4px;
+  background: var(--grey);
+  border-radius: 5px;
+  border: 2px solid #dfe4ea;
 }
 
 .category-scroller::-webkit-scrollbar-thumb:hover {
-  background: var(--grey);
+  background: var(--ink);
+}
+
+/* A category with nothing in it still keeps its place in the
+   list, so the rows do not shuffle as stock sells out. */
+.category-empty {
+  font-size: 13px;
+  color: var(--grey);
+  padding: 14px 2px;
+}
+
+
+/* A soft fade on the right edge of a row, so it reads as "there
+   is more this way" even before you notice the scrollbar. */
+.category-row {
+  position: relative;
+}
+
+.category-row::after {
+  content: '';
+  position: absolute;
+  top: 26px;
+  right: 0;
+  bottom: 18px;
+  width: 34px;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(238, 241, 244, 0), var(--floor));
 }
