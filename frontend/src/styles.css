@@ -23,6 +23,17 @@
   box-sizing: border-box;
 }
 
+/* The window itself never scrolls. Everything that scrolls does
+   it inside its own box, which is what keeps the cart still while
+   the products move. Without this the whole page slides and the
+   cart goes with it. */
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   background: var(--floor);
@@ -210,12 +221,16 @@ td {
 
 /* ---------- the menu on the left ---------- */
 
+/* A fixed frame, not a growing page. */
 .app {
   display: flex;
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
 }
 
+/* The menu scrolls on its own if the window is short. */
 .menu {
+  overflow-y: auto;
   width: 170px;
   flex-shrink: 0;
   background: var(--ink);
@@ -262,14 +277,16 @@ td {
 
 .page {
   flex: 1;
+  min-width: 0;
   padding: 24px 28px;
+  overflow-y: auto;
 }
 
 /* ---------- the sell screen ---------- */
 
 .sell {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   overflow: hidden;
 }
@@ -572,10 +589,31 @@ td {
 
 /* ---------- small screens ---------- */
 
+/* On a narrow screen the columns stack, and a locked frame would
+   trap everything below the fold. So the page scrolls normally
+   again there. */
 @media (max-width: 850px) {
+  html,
+  body,
+  #root {
+    height: auto;
+    overflow: visible;
+  }
+
   .app,
   .sell {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .sell-left,
+  .page {
+    overflow-y: visible;
+  }
+
+  .sell-right {
+    min-width: 0;
   }
 
   .menu {
@@ -1280,47 +1318,16 @@ td {
   color: #8a5a00;
 }
 
-/* One row per category, scrolling sideways. Fixed-width tiles so
-   the row never reflows as the shop's stock changes — a cashier
-   learns where things sit, and things moving about undoes that. */
+/* The products in one category. They wrap onto as many lines as
+   they need — nothing scrolls sideways, because anything off the
+   right edge is a product the cashier will never find.
+   Fixed-width tiles so the grid does not reflow as stock changes:
+   a cashier learns where things sit, and tiles moving about
+   undoes that learning. */
 .category-scroller {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-
-  /* Firefox. The two colours are thumb then track. */
-  scrollbar-width: thin;
-  scrollbar-color: var(--grey) #dfe4ea;
-}
-
-.category-scroller .product-button {
-  width: 132px;
-  flex-shrink: 0;
-}
-
-/* The scrollbar needs to be obvious, not tasteful. A cashier who
-   cannot tell a row continues will never look, and the products
-   off the right edge may as well not be in the shop.
-   So: a visible track, a dark thumb, and both on show at all
-   times rather than appearing on hover. */
-.category-scroller::-webkit-scrollbar {
-  height: 10px;
-}
-
-.category-scroller::-webkit-scrollbar-track {
-  background: #dfe4ea;
-  border-radius: 5px;
-}
-
-.category-scroller::-webkit-scrollbar-thumb {
-  background: var(--grey);
-  border-radius: 5px;
-  border: 2px solid #dfe4ea;
-}
-
-.category-scroller::-webkit-scrollbar-thumb:hover {
-  background: var(--ink);
 }
 
 /* A category with nothing in it still keeps its place in the
@@ -1329,22 +1336,4 @@ td {
   font-size: 13px;
   color: var(--grey);
   padding: 14px 2px;
-}
-
-
-/* A soft fade on the right edge of a row, so it reads as "there
-   is more this way" even before you notice the scrollbar. */
-.category-row {
-  position: relative;
-}
-
-.category-row::after {
-  content: '';
-  position: absolute;
-  top: 26px;
-  right: 0;
-  bottom: 18px;
-  width: 34px;
-  pointer-events: none;
-  background: linear-gradient(to right, rgba(238, 241, 244, 0), var(--floor));
 }
