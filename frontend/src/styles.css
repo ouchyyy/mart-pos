@@ -376,6 +376,7 @@ td {
 .product-button .name {
   font-weight: 500;
   font-size: 13px;
+  margin-top: 1px;
   /* Two lines at most, so one long name cannot make its tile
      taller than the others in the row. */
   display: -webkit-box;
@@ -386,7 +387,7 @@ td {
 
 /* Directly under the name, not pushed away from it. */
 .product-button .price-row {
-  margin-top: 4px;
+  margin-top: 3px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -1296,14 +1297,17 @@ td {
 
 /* Amber rather than red: this is an opportunity to sell
    something, not a problem to fix. Red is for out of stock. */
+/* Sits between the name and the price, with a little room on
+   both sides so it does not look wedged in. Only as wide as its
+   own words, so it cannot stretch the tile. */
 .clearance-badge {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: #8a5a00;
   background: #fff4d6;
   border-radius: 3px;
-  padding: 1px 5px;
-  margin-top: 2px;
+  padding: 2px 6px;
+  margin: 3px 0;
   align-self: flex-start;
   white-space: nowrap;
 }
@@ -1456,10 +1460,9 @@ td {
 
 .customer-line {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 14px 0;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
   border-bottom: 1px solid #eef1f4;
 }
 
@@ -1543,4 +1546,30 @@ td {
   font-size: 20px;
   font-weight: 600;
   margin: 10px 0 0;
+}
+
+/* ---------- pictures on the customer's screen ---------- */
+
+.customer-photo {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #f7f8fa;
+}
+
+.customer-photo.missing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--line);
+  font-size: 24px;
+}
+
+/* The name and price sit beside the picture, and the line total
+   stays on the far right. */
+.customer-text {
+  flex: 1;
+  min-width: 0;
 }
