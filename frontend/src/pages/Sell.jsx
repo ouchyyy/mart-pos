@@ -10,6 +10,7 @@ import { getProducts, getCategories, saveSale } from '../database';
 import { money, riel } from '../money';
 import Receipt from '../components/Receipt';
 import QrPayment from '../components/QrPayment';
+import { sendToCustomerScreen } from '../cartChannel';
 
 export default function Sell() {
   const [products, setProducts] = useState([]);
@@ -302,6 +303,26 @@ export default function Sell() {
 
   // With cash we need enough money. With QR the customer pays
   // the exact amount, so there is nothing to check.
+  // Tell the customer screen about anything it shows. Runs after
+  // every change, which is cheap — it is one message between two
+  // windows, not a trip to the database.
+  useEffect(() => {
+    sendToCustomerScreen({
+      items: cart.map((row) => ({
+        name: row.name,
+        price: row.price,
+        quantity: row.quantity,
+        discount: lineDiscountOf(row),
+        lineTotal: lineTotal(row),
+      })),
+      subtotal: subtotal,
+      itemDiscounts: itemDiscounts,
+      discount: discountAmount,
+      total: total,
+      showQr: showingQr,
+    });
+  }, [cart, discount, discountIsPercent, showingQr]);
+
   const canCharge =
     cart.length > 0 && !busy && (!payingCash || Number(cashGiven) >= total);
 
@@ -510,6 +531,19 @@ export default function Sell() {
       <div className="sell-right">
         <div className="cart-title">
           <h2 style={{ margin: 0 }}>Cart</h2>
+
+          {/* Opens the customer display in its own window, ready
+              to drag onto a second monitor. */}
+          <button
+            className="small"
+            title="Open the screen that faces the customer"
+            onClick={() =>
+              window.open('?customer=1', 'customer-screen', 'width=900,height=700')
+            }
+          >
+            Customer screen
+          </button>
+
           {cart.length > 0 && (
             <button className="danger small" onClick={() => setCart([])}>
               Clear
