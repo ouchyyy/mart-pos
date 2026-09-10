@@ -290,7 +290,6 @@ td {
   border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .search-box {
@@ -1254,17 +1253,15 @@ td {
 }
 
 .category-heading {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
 }
 
-.category-heading span {
-  font-size: 12px;
-  font-weight: 400;
+/* The clearance row is the one worth noticing, so it gets the
+   same amber the badges use. */
+.category-heading.offer {
+  color: #8a5a00;
 }
 
 /* One row per category, scrolling sideways. Fixed-width tiles so
