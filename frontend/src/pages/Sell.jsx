@@ -51,6 +51,27 @@ export default function Sell() {
     );
   });
 
+  // Group what is on screen by category, keeping the categories
+  // in the order they first appear (the list is already sorted by
+  // name, so this comes out alphabetical).
+  function groupByCategory(list) {
+    const groups = [];
+
+    for (const product of list) {
+      const name = product.category_name || 'No category';
+      let group = groups.find((g) => g.name === name);
+
+      if (!group) {
+        group = { name: name, products: [] };
+        groups.push(group);
+      }
+
+      group.products.push(product);
+    }
+
+    return groups;
+  }
+
   function addToCart(product) {
     setError('');
 
@@ -288,9 +309,13 @@ export default function Sell() {
 
         {error && <div className="error">{error}</div>}
 
-        {shownProducts.length === 0 ? (
+        {shownProducts.length === 0 && (
           <div className="empty">No products match "{search}"</div>
-        ) : (
+        )}
+
+        {/* While searching, one flat list is what you want — the
+            categories only get in the way of finding one thing. */}
+        {shownProducts.length > 0 && search !== '' && (
           <div className="product-grid">
             {shownProducts.map((product) => (
               <button
@@ -333,6 +358,66 @@ export default function Sell() {
             ))}
           </div>
         )}
+
+        {/* Not searching: one row per category, each scrolling
+            sideways. A shopkeeper knows which shelf a thing is on
+            long before they know its name, so grouping matches how
+            they already think about the shop. */}
+        {shownProducts.length > 0 &&
+          search === '' &&
+          groupByCategory(shownProducts).map((group) => (
+            <div className="category-row" key={group.name}>
+              <div className="category-heading">
+                {group.name}
+                <span className="grey">{group.products.length}</span>
+              </div>
+
+              <div className="category-scroller">
+                {group.products.map((product) => (
+                  <button
+                    key={product.id}
+                    className="product-button"
+                    onClick={() => addToCart(product)}
+                    disabled={product.stock_quantity < 1}
+                  >
+                    {product.image_url ? (
+                      <img src={product.image_url} alt="" className="product-photo" />
+                    ) : (
+                      <div className="product-photo-missing">?</div>
+                    )}
+
+                    <div className="name">{product.name}</div>
+
+                    {product.clearance_percent > 0 && (
+                      <div className="clearance-badge">
+                        {product.clearance_percent}% off ·{' '}
+                        {product.days_to_expiry === 0
+                          ? 'today'
+                          : product.days_to_expiry + ' days left'}
+                      </div>
+                    )}
+
+                    <div className="price-row">
+                      <strong className="number">
+                        {money(product.selling_price)}
+                      </strong>
+                      <span
+                        className={
+                          product.stock_quantity <= product.low_stock_at
+                            ? 'stock low number'
+                            : 'stock number'
+                        }
+                      >
+                        {product.stock_quantity < 1
+                          ? 'Out'
+                          : product.stock_quantity + ' left'}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
       </div>
 
       <div className="sell-right">
