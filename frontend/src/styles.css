@@ -269,13 +269,18 @@ td {
 
 .sell {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
+/* Each side scrolls on its own. A long product list must not push
+   the Charge button off the bottom of the screen — at a till that
+   button has to be in the same place every time. */
 .sell-left {
   flex: 1;
   padding: 20px 24px;
+  overflow-y: auto;
 }
 
 .sell-right {
@@ -285,12 +290,16 @@ td {
   border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .search-box {
   font-size: 17px;
   padding: 13px;
   margin-bottom: 18px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .product-grid {
@@ -1235,4 +1244,54 @@ td {
   .filter-row select {
     width: 100%;
   }
+}
+
+
+/* ---------- products grouped by category ---------- */
+
+.category-row {
+  margin-bottom: 22px;
+}
+
+.category-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.category-heading span {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* One row per category, scrolling sideways. Fixed-width tiles so
+   the row never reflows as the shop's stock changes — a cashier
+   learns where things sit, and things moving about undoes that. */
+.category-scroller {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.category-scroller .product-button {
+  width: 132px;
+  flex-shrink: 0;
+}
+
+/* A thin scrollbar, visible enough to show there is more to see. */
+.category-scroller::-webkit-scrollbar {
+  height: 7px;
+}
+
+.category-scroller::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+
+.category-scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--grey);
 }
