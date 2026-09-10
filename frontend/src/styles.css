@@ -364,7 +364,7 @@ td {
 .product-button {
   text-align: left;
   padding: 7px;
-  height: 132px;
+  height: 158px;
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -1259,14 +1259,19 @@ td {
    more than seeing each one large.
    "contain" fits the whole product in instead of cropping it,
    because half a coffee jar looks like any other half a jar. */
+/* Bigger, and with no box around it.
+   The grey background was the problem: a tall thin bottle in a
+   wide box leaves gaps on both sides, and the background drew a
+   rectangle around that emptiness so it read as wasted space.
+   With no background the leftover room just blends into the tile,
+   and the photo can be taller because it is no longer competing
+   with a box. */
 .product-photo {
   width: 100%;
-  height: 44px;
+  height: 72px;
   object-fit: contain;
-  background: #f7f8fa;
-  border-radius: 3px;
-  padding: 3px;
-  margin-bottom: 5px;
+  padding: 0;
+  margin-bottom: 6px;
   display: block;
 }
 
@@ -1274,7 +1279,7 @@ td {
    in a row end up different heights. */
 .product-photo-missing {
   width: 100%;
-  height: 44px;
+  height: 72px;
   border-radius: 3px;
   background: #f7f8fa;
   color: var(--line);
