@@ -416,7 +416,7 @@ export default function Sell() {
 
         {/* While searching, one flat list is what you want — the
             categories only get in the way of finding one thing. */}
-        {shownProducts.length > 0 && search !== '' && (
+        {shownProducts.length > 0 && (search !== '' || filterCategory !== '') && (
           <div className="product-grid">
             {shownProducts.map((product) => (
               <button
@@ -466,6 +466,7 @@ export default function Sell() {
             they already think about the shop. */}
         {shownProducts.length > 0 &&
           search === '' &&
+          filterCategory === '' &&
           groupByCategory(shownProducts).map((group) => (
             <div className="category-row" key={group.name}>
               <div
