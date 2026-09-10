@@ -94,8 +94,8 @@ button.danger {
 
 button.big {
   width: 100%;
-  padding: 14px;
-  font-size: 17px;
+  padding: 12px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -350,8 +350,8 @@ td {
    suits a laptop and a wide till screen without being told. */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  gap: 8px;
   align-items: stretch;
 }
 
@@ -360,16 +360,18 @@ td {
    and scanning it quickly is the whole job. */
 .product-button {
   text-align: left;
-  padding: 10px;
-  height: 196px;
+  padding: 8px;
+  height: 156px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  line-height: 1.3;
+  line-height: 1.25;
+  font-size: 14px;
 }
 
 .product-button .name {
   font-weight: 500;
+  font-size: 14px;
   /* Long names get cut off after two lines instead of making
      one button taller than the rest of the row. */
   display: -webkit-box;
@@ -390,7 +392,7 @@ td {
 }
 
 .product-button .stock {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--grey);
 }
 
@@ -484,14 +486,14 @@ td {
 /* The one loud thing in the whole app. */
 .total-bar {
   background: var(--yellow);
-  padding: 16px 18px;
+  padding: 12px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .total-bar .amount {
-  font-size: 26px;
+  font-size: 23px;
   font-weight: 700;
   line-height: 1.15;
 }
@@ -505,16 +507,27 @@ td {
   align-items: flex-end;
 }
 
+/* Kept tight so the Charge button always fits on screen under
+   the total, whatever else is going on above it. */
 .payment {
-  padding: 16px 18px;
+  padding: 12px 14px;
   border-top: 1px solid var(--line);
+}
+
+.payment label {
+  margin-bottom: 8px;
+}
+
+.payment input {
+  font-size: 18px;
+  padding: 9px 11px;
 }
 
 .change-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px 0 14px;
+  padding: 6px 0 10px;
   font-weight: 600;
 }
 
@@ -755,8 +768,12 @@ td {
 
 .pay-choice {
   display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.pay-choice button {
+  padding: 7px 10px;
 }
 
 .pay-choice button {
@@ -1242,12 +1259,12 @@ td {
    because half a coffee jar looks like any other half a jar. */
 .product-photo {
   width: 100%;
-  height: 62px;
+  height: 52px;
   object-fit: contain;
   background: #f7f8fa;
   border-radius: 3px;
-  padding: 4px;
-  margin-bottom: 6px;
+  padding: 3px;
+  margin-bottom: 5px;
   display: block;
 }
 
@@ -1255,7 +1272,7 @@ td {
    in a row end up different heights. */
 .product-photo-missing {
   width: 100%;
-  height: 62px;
+  height: 52px;
   border-radius: 3px;
   background: #f7f8fa;
   color: var(--line);
@@ -1271,14 +1288,15 @@ td {
 /* Amber rather than red: this is an opportunity to sell
    something, not a problem to fix. Red is for out of stock. */
 .clearance-badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: #8a5a00;
   background: #fff4d6;
   border-radius: 3px;
-  padding: 2px 6px;
-  margin-top: 3px;
+  padding: 1px 5px;
+  margin-top: 2px;
   align-self: flex-start;
+  white-space: nowrap;
 }
 
 .clearance-note {
