@@ -1216,10 +1216,8 @@ td {
   width: 42px;
   height: 42px;
   flex-shrink: 0;
-  object-fit: contain;
-  background: #f7f8fa;
+  object-fit: cover;
   border-radius: 3px;
-  padding: 3px;
 }
 
 /* A product with no picture keeps the same space, so names in
@@ -1259,17 +1257,21 @@ td {
    more than seeing each one large.
    "contain" fits the whole product in instead of cropping it,
    because half a coffee jar looks like any other half a jar. */
-/* Bigger, and with no box around it.
-   The grey background was the problem: a tall thin bottle in a
-   wide box leaves gaps on both sides, and the background drew a
-   rectangle around that emptiness so it read as wasted space.
-   With no background the leftover room just blends into the tile,
-   and the photo can be taller because it is no longer competing
-   with a box. */
+/* Every photo the same size, filling the same box.
+   "cover" scales the picture until it fills the space and trims
+   whatever hangs over, so a tall bottle and a wide crisp packet
+   end up looking the same size on the shelf. "contain" would fit
+   each one whole, but then a bottle looks tiny beside a packet
+   and the row reads as untidy.
+   The trade is that very tall products lose a little top and
+   bottom. Change "cover" to "contain" below if you would rather
+   see every product whole. */
 .product-photo {
   width: 100%;
-  height: 62px;
-  object-fit: contain;
+  height: 78px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 3px;
   padding: 0;
   margin-bottom: 6px;
   display: block;
@@ -1279,7 +1281,7 @@ td {
    in a row end up different heights. */
 .product-photo-missing {
   width: 100%;
-  height: 62px;
+  height: 78px;
   border-radius: 3px;
   background: #f7f8fa;
   color: var(--line);
