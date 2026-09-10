@@ -350,7 +350,7 @@ td {
    suits a laptop and a wide till screen without being told. */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
   gap: 8px;
   align-items: stretch;
 }
@@ -358,27 +358,29 @@ td {
 /* A fixed height so every tile matches, with or without a
    discount badge. Ragged tile heights make a grid hard to scan,
    and scanning it quickly is the whole job. */
+/* Photo, name, then price on the bottom edge. Short enough that
+   the whole tile reads as one thing rather than three parts with
+   space between them. */
 .product-button {
   text-align: left;
-  padding: 8px;
-  height: 156px;
+  padding: 7px;
+  height: 132px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  line-height: 1.25;
-  font-size: 14px;
+  gap: 1px;
+  line-height: 1.2;
+  font-size: 13px;
 }
 
 .product-button .name {
   font-weight: 500;
-  font-size: 14px;
-  /* Long names get cut off after two lines instead of making
-     one button taller than the rest of the row. */
+  font-size: 13px;
+  /* Two lines at most, so one long name cannot make its tile
+     taller than the others in the row. */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.6em;
 }
 
 /* Pushed to the bottom, so prices line up across a row no matter
@@ -392,7 +394,7 @@ td {
 }
 
 .product-button .stock {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--grey);
 }
 
@@ -1259,7 +1261,7 @@ td {
    because half a coffee jar looks like any other half a jar. */
 .product-photo {
   width: 100%;
-  height: 52px;
+  height: 44px;
   object-fit: contain;
   background: #f7f8fa;
   border-radius: 3px;
@@ -1272,7 +1274,7 @@ td {
    in a row end up different heights. */
 .product-photo-missing {
   width: 100%;
-  height: 52px;
+  height: 44px;
   border-radius: 3px;
   background: #f7f8fa;
   color: var(--line);
