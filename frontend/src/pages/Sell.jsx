@@ -15,6 +15,7 @@ export default function Sell() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
   const [cart, setCart] = useState([]);
   const [cashGiven, setCashGiven] = useState('');
   const [error, setError] = useState('');
@@ -42,9 +43,26 @@ export default function Sell() {
   // We filter the list we already have instead of asking the
   // database again, so typing feels instant.
   const shownProducts = products.filter((product) => {
+    // Two filters, both have to pass. The chips narrow to one
+    // shelf; the search box finds one thing.
+    const name = product.category_name || 'No category';
+
+    let matchesFilter = true;
+
+    if (filterCategory === 'offers') {
+      matchesFilter = product.clearance_percent > 0;
+    } else if (filterCategory !== '') {
+      matchesFilter = name === filterCategory;
+    }
+
+    if (!matchesFilter) {
+      return false;
+    }
+
     if (search === '') {
       return true;
     }
+
     const text = search.toLowerCase();
     return (
       product.name.toLowerCase().includes(text) ||
@@ -338,6 +356,37 @@ export default function Sell() {
           autoFocus
         />
 
+        {/* Filter chips rather than a dropdown: at a till every
+            extra tap costs time, and a dropdown hides the choices
+            until you open it. */}
+        <div className="filter-chips">
+          <button
+            className={filterCategory === '' ? 'chip on' : 'chip'}
+            onClick={() => setFilterCategory('')}
+          >
+            All
+          </button>
+
+          {products.some((product) => product.clearance_percent > 0) && (
+            <button
+              className={filterCategory === 'offers' ? 'chip offers on' : 'chip offers'}
+              onClick={() => setFilterCategory('offers')}
+            >
+              Discounts
+            </button>
+          )}
+
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              className={filterCategory === category.name ? 'chip on' : 'chip'}
+              onClick={() => setFilterCategory(category.name)}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+
         {error && <div className="error">{error}</div>}
 
         {shownProducts.length === 0 && (
@@ -406,7 +455,7 @@ export default function Sell() {
                 {group.name}
               </div>
 
-              <div className="category-scroller">
+              <div className="product-grid">
                 {group.products.length === 0 && (
                   <div className="category-empty">Nothing in stock</div>
                 )}
