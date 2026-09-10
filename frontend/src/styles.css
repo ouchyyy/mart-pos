@@ -301,23 +301,35 @@ td {
    available and shoving the cart off the screen. Setting it to 0
    lets the column stay where it is and the row scroll inside it
    instead. */
+/* The products keep clear of the pinned cart with a margin the
+   same width, so nothing ever ends up underneath it. */
 .sell-left {
   flex: 1;
   min-width: 0;
+  margin-right: 360px;
   padding: 20px 24px;
   overflow-y: auto;
 }
 
-/* Fixed width, and it never shrinks. Whatever happens on the left,
-   the cart stays exactly this size. */
+/* The cart is pinned to the right edge of the window and taken
+   out of the layout entirely.
+
+   Every earlier attempt left it as a flex column beside the
+   products, which meant a wide row of products could still push
+   it sideways. Pinned, nothing on the left can reach it: it is
+   always the same width, always the full height, and it never
+   moves when anything scrolls. */
 .sell-right {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 360px;
-  min-width: 360px;
-  flex-shrink: 0;
   background: white;
   border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
+  z-index: 10;
 }
 
 /* Pinned to the top so it is always reachable. It needs its own
@@ -613,7 +625,15 @@ td {
   }
 
   .sell-right {
+    position: static;
+    width: 100%;
     min-width: 0;
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .sell-left {
+    margin-right: 0;
   }
 
   .menu {
