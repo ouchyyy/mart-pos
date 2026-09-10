@@ -57,7 +57,22 @@ export default function Sell() {
   function groupByCategory(list) {
     const groups = [];
 
+    // Everything marked down goes in its own row at the top.
+    // A cashier should be nudged to shift the short-dated stock
+    // first, and hunting for it inside its usual category is the
+    // opposite of a nudge.
+    const onOffer = list.filter((product) => product.clearance_percent > 0);
+
+    if (onOffer.length > 0) {
+      groups.push({ name: 'Discounts', products: onOffer, isOffer: true });
+    }
+
     for (const product of list) {
+      // Already shown above, so do not show it twice.
+      if (product.clearance_percent > 0) {
+        continue;
+      }
+
       const name = product.category_name || 'No category';
       let group = groups.find((g) => g.name === name);
 
@@ -367,9 +382,12 @@ export default function Sell() {
           search === '' &&
           groupByCategory(shownProducts).map((group) => (
             <div className="category-row" key={group.name}>
-              <div className="category-heading">
+              <div
+                className={
+                  group.isOffer ? 'category-heading offer' : 'category-heading'
+                }
+              >
                 {group.name}
-                <span className="grey">{group.products.length}</span>
               </div>
 
               <div className="category-scroller">
