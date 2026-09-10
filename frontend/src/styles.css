@@ -345,15 +345,23 @@ td {
   box-shadow: 0 -20px 0 20px var(--floor);
 }
 
+/* As many tiles as fit across, then a new row. auto-fill works
+   out the count from the space available, so the same layout
+   suits a laptop and a wide till screen without being told. */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
+  align-items: stretch;
 }
 
+/* A fixed height so every tile matches, with or without a
+   discount badge. Ragged tile heights make a grid hard to scan,
+   and scanning it quickly is the whole job. */
 .product-button {
   text-align: left;
   padding: 10px;
+  height: 196px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -371,8 +379,10 @@ td {
   min-height: 2.6em;
 }
 
+/* Pushed to the bottom, so prices line up across a row no matter
+   how long the names are. */
 .product-button .price-row {
-  margin-top: 4px;
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -1338,22 +1348,46 @@ td {
   color: #8a5a00;
 }
 
-/* The products in one category. They wrap onto as many lines as
-   they need — nothing scrolls sideways, because anything off the
-   right edge is a product the cashier will never find.
-   Fixed-width tiles so the grid does not reflow as stock changes:
-   a cashier learns where things sit, and tiles moving about
-   undoes that learning. */
-.category-scroller {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
 /* A category with nothing in it still keeps its place in the
-   list, so the rows do not shuffle as stock sells out. */
+   list, so the shelves do not shuffle as stock sells out. */
 .category-empty {
   font-size: 13px;
   color: var(--grey);
   padding: 14px 2px;
+}
+
+
+
+
+
+/* ---------- filter chips ---------- */
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.chip {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 14px;
+}
+
+.chip.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+.chip.offers {
+  color: #8a5a00;
+  border-color: #f0d9a0;
+}
+
+.chip.offers.on {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--ink);
 }
