@@ -126,7 +126,7 @@ export default function Movements() {
                 <th>When</th>
                 <th>Product</th>
                 <th>Sold by</th>
-                <th className="right">Quantity</th>
+                <th className="right">Change</th>
                 <th className="right">Left</th>
               </tr>
             </thead>
@@ -138,8 +138,15 @@ export default function Movements() {
                   <td className="small-text">
                     {row.profiles ? row.profiles.full_name || 'Unnamed staff' : '-'}
                   </td>
-                  <td className="right number" style={{ fontWeight: 600 }}>
-                    {Math.abs(row.change)}
+                  {/* Shown as a negative, in red, because that is what
+                      it is: stock leaving the shop. It matches the
+                      Stock changes panel above, so a number means the
+                      same thing on both. */}
+                  <td
+                    className="right number"
+                    style={{ color: 'var(--red)', fontWeight: 600 }}
+                  >
+                    {row.change}
                   </td>
                   <td className="right number">{row.stock_after}</td>
                 </tr>
