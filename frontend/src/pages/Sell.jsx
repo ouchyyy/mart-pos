@@ -169,6 +169,7 @@ export default function Sell() {
       {
         id: product.id,
         name: product.name,
+        image: product.image_url,
         price: Number(product.selling_price),
         stock: product.stock_quantity,
         quantity: 1,
@@ -319,6 +320,7 @@ export default function Sell() {
     sendToCustomerScreen({
       items: cart.map((row) => ({
         name: row.name,
+        image: row.image,
         price: row.price,
         quantity: row.quantity,
         discount: lineDiscountOf(row),
@@ -447,7 +449,7 @@ export default function Sell() {
                     {product.clearance_percent}% off ·{' '}
                     {product.days_to_expiry === 0
                       ? 'today'
-                      : product.days_to_expiry + ' days left'}
+                      : product.days_to_expiry + 'd'}
                   </div>
                 )}
                 <div className="price-row">
@@ -506,12 +508,15 @@ export default function Sell() {
 
                     <div className="name">{product.name}</div>
 
+                    {/* Short on purpose. "50% off · 11 days left" is
+                        wider than the picture, so the tile stretched
+                        to fit the words and the grid went ragged. */}
                     {product.clearance_percent > 0 && (
                       <div className="clearance-badge">
                         {product.clearance_percent}% off ·{' '}
                         {product.days_to_expiry === 0
                           ? 'today'
-                          : product.days_to_expiry + ' days left'}
+                          : product.days_to_expiry + 'd'}
                       </div>
                     )}
 
