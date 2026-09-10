@@ -1211,3 +1211,28 @@ td {
   text-decoration: line-through;
   margin-left: 4px;
 }
+
+/* ---------- the filter row above a table ---------- */
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-row input {
+  width: 240px;
+}
+
+.filter-row select {
+  width: 200px;
+}
+
+@media (max-width: 700px) {
+  .filter-row input,
+  .filter-row select {
+    width: 100%;
+  }
+}
