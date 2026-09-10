@@ -6,13 +6,14 @@
 // ============================================================
 
 import { useState, useEffect } from 'react';
-import { getProducts, saveSale } from '../database';
+import { getProducts, getCategories, saveSale } from '../database';
 import { money, riel } from '../money';
 import Receipt from '../components/Receipt';
 import QrPayment from '../components/QrPayment';
 
 export default function Sell() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
   const [cart, setCart] = useState([]);
   const [cashGiven, setCashGiven] = useState('');
@@ -30,8 +31,8 @@ export default function Sell() {
 
   async function loadProducts() {
     try {
-      const list = await getProducts();
-      setProducts(list);
+      setProducts(await getProducts());
+      setCategories(await getCategories());
     } catch (err) {
       setError(err.message);
     }
@@ -67,8 +68,19 @@ export default function Sell() {
       groups.push({ name: 'Discounts', products: onOffer, isOffer: true });
     }
 
+    // Start with every category the shop has, in name order, so
+    // the rows stay in the same place all day. If they appeared
+    // only when they had stock, the shelves would shuffle around
+    // as things sold out — and a cashier who has learned where
+    // things are would have to look again.
+    for (const category of categories) {
+      groups.push({ name: category.name, products: [] });
+    }
+
+    groups.push({ name: 'No category', products: [] });
+
     for (const product of list) {
-      // Already shown above, so do not show it twice.
+      // Already shown in the discounts row above.
       if (product.clearance_percent > 0) {
         continue;
       }
@@ -76,6 +88,8 @@ export default function Sell() {
       const name = product.category_name || 'No category';
       let group = groups.find((g) => g.name === name);
 
+      // A category that was deleted while a product still points
+      // at it. Rare, but it should not make the product vanish.
       if (!group) {
         group = { name: name, products: [] };
         groups.push(group);
@@ -84,7 +98,11 @@ export default function Sell() {
       group.products.push(product);
     }
 
-    return groups;
+    // Drop 'No category' when nothing is in it, since it is not a
+    // real shelf. Real categories stay even when empty.
+    return groups.filter(
+      (group) => group.name !== 'No category' || group.products.length > 0
+    );
   }
 
   function addToCart(product) {
@@ -391,6 +409,10 @@ export default function Sell() {
               </div>
 
               <div className="category-scroller">
+                {group.products.length === 0 && (
+                  <div className="category-empty">Nothing in stock</div>
+                )}
+
                 {group.products.map((product) => (
                   <button
                     key={product.id}
