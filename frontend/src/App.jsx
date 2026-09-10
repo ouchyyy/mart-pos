@@ -21,6 +21,7 @@ import Movements from './pages/Movements';
 import Sales from './pages/Sales';
 import Reports from './pages/Reports';
 import Staff from './pages/Staff';
+import CustomerScreen from './pages/CustomerScreen';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -47,6 +48,13 @@ export default function App() {
     await signOut();
     setUser(null);
     setPage('sell');
+  }
+
+  // The customer display is opened at ?customer=1 in its own
+  // window. It comes before the sign-in check on purpose: it is a
+  // screen facing a customer, not a person using the system.
+  if (window.location.search.includes('customer')) {
+    return <CustomerScreen />;
   }
 
   if (loading) {
