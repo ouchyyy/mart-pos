@@ -399,7 +399,7 @@ td {
 }
 
 .cart-title {
-  padding: 16px 18px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
@@ -411,9 +411,13 @@ td {
   overflow-y: auto;
 }
 
+/* Tighter than the rest of the app. A cart with eight things in
+   it has to fit without scrolling, and a cashier reads these at a
+   glance rather than studying them. */
 .cart-row {
-  padding: 12px 18px;
+  padding: 8px 14px;
   border-bottom: 1px solid #e6ebef;
+  font-size: 14px;
 }
 
 .cart-line-top {
@@ -440,7 +444,7 @@ td {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 5px;
 }
 
 /* Money off one line. Small and quiet, because most sales will
@@ -459,8 +463,8 @@ td {
 }
 
 .line-discount input {
-  width: 62px;
-  padding: 4px 6px;
+  width: 52px;
+  padding: 3px 6px;
   font-size: 13px;
   text-align: right;
 }
@@ -472,7 +476,7 @@ td {
 }
 
 .cart-row .quantity span {
-  min-width: 20px;
+  min-width: 18px;
   text-align: center;
   font-weight: 600;
 }
@@ -987,7 +991,7 @@ td {
 /* ---------- per-line discount kind ---------- */
 
 .line-discount .kind {
-  padding: 4px 7px;
+  padding: 3px 6px;
   font-size: 11px;
   font-weight: 600;
   color: var(--grey);
@@ -1390,4 +1394,126 @@ td {
   background: var(--yellow);
   border-color: var(--yellow);
   color: var(--ink);
+}
+
+/* ---------- the customer's screen ---------- */
+
+/* Bigger than the till in every way. It is read from the far side
+   of a counter, standing up, by someone who is not looking for it.
+   The till is read from a foot away by someone who is. */
+.customer-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  padding: 28px 34px;
+  overflow-y: auto;
+}
+
+.customer-welcome {
+  margin: auto;
+  text-align: center;
+  color: var(--grey);
+}
+
+.customer-welcome h1 {
+  font-size: 40px;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.customer-items {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.customer-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eef1f4;
+}
+
+.customer-name {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.customer-each {
+  font-size: 16px;
+  color: var(--grey);
+  margin-top: 2px;
+}
+
+/* A saving is worth saying out loud — it is the part a customer
+   most wants to see confirmed. */
+.customer-saved {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.customer-line-total {
+  font-size: 22px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.customer-summary {
+  border-top: 2px solid var(--ink);
+  padding-top: 14px;
+  margin-top: 10px;
+}
+
+.customer-sub {
+  display: flex;
+  justify-content: space-between;
+  font-size: 17px;
+  color: var(--grey);
+  padding: 3px 0;
+}
+
+.customer-sub.saved {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.customer-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--yellow);
+  padding: 16px 20px;
+  margin-top: 12px;
+  border-radius: 4px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.customer-amounts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.15;
+}
+
+.customer-qr {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.customer-qr img {
+  width: 260px;
+  max-width: 60%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  background: white;
+}
+
+.customer-qr p {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 10px 0 0;
 }
