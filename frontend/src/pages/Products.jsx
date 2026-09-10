@@ -33,6 +33,7 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [editing, setEditing] = useState(null);
   const [showCategories, setShowCategories] = useState(false);
   const [showBatchesOf, setShowBatchesOf] = useState(null);
@@ -65,12 +66,37 @@ export default function Products() {
     }
   }
 
+  // A product has to pass both filters to be shown. Written as
+  // two separate checks rather than one long condition, so adding
+  // a third filter later means adding a third check.
   const shown = products.filter((product) => {
-    if (search === '') {
-      return true;
+    const matchesName =
+      search === '' ||
+      product.name.toLowerCase().includes(search.toLowerCase());
+
+    // '' means "all categories". 'none' is its own choice, for
+    // finding the products somebody forgot to file.
+    let matchesCategory = true;
+
+    if (categoryId === 'none') {
+      matchesCategory = !product.category_id;
+    } else if (categoryId !== '') {
+      matchesCategory = String(product.category_id) === categoryId;
     }
-    return product.name.toLowerCase().includes(search.toLowerCase());
+
+    return matchesName && matchesCategory;
   });
+
+  // How many products sit in each category, so the dropdown can
+  // say "Drinks (4)" instead of making you pick blind.
+  function countIn(id) {
+    if (id === 'none') {
+      return products.filter((product) => !product.category_id).length;
+    }
+    return products.filter(
+      (product) => String(product.category_id) === String(id)
+    ).length;
+  }
 
   return (
     <div>
@@ -86,12 +112,40 @@ export default function Products() {
 
       {error && <div className="error">{error}</div>}
 
-      <input
-        placeholder="Search by name"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ maxWidth: 320, marginBottom: 16 }}
-      />
+      <div className="filter-row">
+        <input
+          placeholder="Search by name"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+          <option value="">All categories ({products.length})</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name} ({countIn(category.id)})
+            </option>
+          ))}
+          <option value="none">No category ({countIn('none')})</option>
+        </select>
+
+        {/* Only offered once a filter is on, so it is not a dead
+            button most of the time. */}
+        {(search !== '' || categoryId !== '') && (
+          <button
+            onClick={() => {
+              setSearch('');
+              setCategoryId('');
+            }}
+          >
+            Clear
+          </button>
+        )}
+
+        <span className="grey small-text">
+          {shown.length} of {products.length}
+        </span>
+      </div>
 
       <div className="box" style={{ padding: 0 }}>
         <table>
