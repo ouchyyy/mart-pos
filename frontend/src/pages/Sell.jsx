@@ -71,6 +71,15 @@ export default function Sell() {
     );
   });
 
+  // Inside a chosen category, the marked-down items come first.
+  // Same reasoning as the Discounts row on the All view: the
+  // short-dated stock is what a cashier should be offered first.
+  if (filterCategory !== '' && filterCategory !== 'offers') {
+    shownProducts.sort(
+      (a, b) => (b.clearance_percent || 0) - (a.clearance_percent || 0)
+    );
+  }
+
   // Group what is on screen by category, keeping the categories
   // in the order they first appear (the list is already sorted by
   // name, so this comes out alphabetical).
