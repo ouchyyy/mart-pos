@@ -65,7 +65,17 @@ export default function CustomerScreen() {
       <div className="customer-items">
         {items.map((item, index) => (
           <div className="customer-line" key={index}>
-            <div>
+            {/* A picture is worth more here than on the till. The
+                customer is checking we scanned the right thing,
+                and they recognise the packet long before they
+                finish reading the name. */}
+            {item.image ? (
+              <img src={item.image} alt="" className="customer-photo" />
+            ) : (
+              <div className="customer-photo missing">?</div>
+            )}
+
+            <div className="customer-text">
               <div className="customer-name">{item.name}</div>
               <div className="customer-each number">
                 {item.quantity} × {money(item.price)}
@@ -76,6 +86,7 @@ export default function CustomerScreen() {
                 )}
               </div>
             </div>
+
             <div className="customer-line-total number">{money(item.lineTotal)}</div>
           </div>
         ))}
