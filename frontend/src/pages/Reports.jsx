@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import {
-  getTodaysSales,
+  getSalesSince,
   getBestSellers,
   getSalesByCategory,
   getBusiestHours,
@@ -22,7 +22,13 @@ import DonutChart from '../components/DonutChart';
 import HoursChart from '../components/HoursChart';
 
 export default function Reports() {
-  const [todaysSales, setTodaysSales] = useState([]);
+  const [sales, setSales] = useState([]);
+
+  // Today, the last week, or the last month. Everything on the
+  // page follows this, so the numbers at the top and the charts
+  // below always cover the same stretch of time — otherwise you
+  // end up comparing one day against thirty without noticing.
+  const [days, setDays] = useState(1);
   const [bestSellers, setBestSellers] = useState([]);
   const [byCategory, setByCategory] = useState([]);
   const [byHour, setByHour] = useState([]);
@@ -33,16 +39,23 @@ export default function Reports() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [days]);
+
+  // The moment the chosen period starts, as a date the database
+  // understands. Today means midnight this morning, not 24 hours
+  // ago — a shopkeeper means "so far today".
+  function startOfPeriod() {
+    const start = new Date();
+    start.setDate(start.getDate() - (days - 1));
+    start.setHours(0, 0, 0, 0);
+    return start.toISOString();
+  }
 
   async function load() {
     try {
-      // Everything below the top row covers the last 30 days.
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      const since = thirtyDaysAgo.toISOString();
+      const since = startOfPeriod();
 
-      setTodaysSales(await getTodaysSales());
+      setSales(await getSalesSince(since));
       setBestSellers(await getBestSellers(since));
       setByCategory(await getSalesByCategory(since));
       setByHour(await getBusiestHours(since));
@@ -54,39 +67,66 @@ export default function Reports() {
     }
   }
 
-  // Add up today.
+  // Add up the chosen period.
   let takings = 0;
   let givenAway = 0;
 
-  for (const sale of todaysSales) {
+  for (const sale of sales) {
     takings = takings + Number(sale.total);
     givenAway =
       givenAway + Number(sale.discount || 0) + Number(sale.item_discount || 0);
   }
 
-  const average = todaysSales.length > 0 ? takings / todaysSales.length : 0;
+  const average = sales.length > 0 ? takings / sales.length : 0;
+
+  // Wording for the cards and the chart captions.
+  const periodLabel =
+    days === 1 ? 'Today' : days === 7 ? 'Last 7 days' : 'Last 30 days';
 
   return (
     <div>
-      <h1>Reports</h1>
+      <div className="reports-head">
+        <h1 style={{ margin: 0 }}>Reports</h1>
+
+        <div className="period-choice">
+          <button
+            className={days === 1 ? 'on' : ''}
+            onClick={() => setDays(1)}
+          >
+            Today
+          </button>
+          <button
+            className={days === 7 ? 'on' : ''}
+            onClick={() => setDays(7)}
+          >
+            7 days
+          </button>
+          <button
+            className={days === 30 ? 'on' : ''}
+            onClick={() => setDays(30)}
+          >
+            30 days
+          </button>
+        </div>
+      </div>
 
       {error && <div className="error">{error}</div>}
 
       <div className="cards">
         <div className="card">
-          <div className="label">Today's takings</div>
+          <div className="label">Takings · {periodLabel.toLowerCase()}</div>
           <div className="value number">{money(takings)}</div>
         </div>
         <div className="card">
-          <div className="label">Sales today</div>
-          <div className="value number">{todaysSales.length}</div>
+          <div className="label">Sales</div>
+          <div className="value number">{sales.length}</div>
         </div>
         <div className="card">
           <div className="label">Average sale</div>
           <div className="value number">{money(average)}</div>
         </div>
         <div className="card">
-          <div className="label">Discounts today</div>
+          <div className="label">Discounts</div>
           <div
             className="value number"
             style={{ color: givenAway > 0 ? 'var(--red)' : '' }}
@@ -96,10 +136,13 @@ export default function Reports() {
         </div>
       </div>
 
-      <div className="side-by-side">
+      {/* "equal" makes both boxes the same height. Without it the
+          taller one sets the row and the shorter one leaves a gap
+          underneath, which reads as something failing to load. */}
+      <div className="side-by-side equal">
         <div className="box">
           <h2>Sales by category</h2>
-          <p className="chart-note">Last 30 days</p>
+          <p className="chart-note">{periodLabel}</p>
           <DonutChart
             slices={byCategory.map((row) => ({
               name: row.name,
@@ -110,7 +153,7 @@ export default function Reports() {
 
         <div className="box">
           <h2>Best sellers</h2>
-          <p className="chart-note">Last 30 days</p>
+          <p className="chart-note">{periodLabel}</p>
           <RankChart
             rows={bestSellers.slice(0, 7).map((row) => ({
               label: row.name,
@@ -124,7 +167,7 @@ export default function Reports() {
       <div className="box" style={{ marginTop: 20 }}>
         <h2>Busiest times of day</h2>
         <p className="chart-note">
-          Last 30 days. This is the one that changes how the shop is run —
+          {periodLabel}. This is the one that changes how the shop is run —
           it says when two people are needed on the till.
         </p>
         <HoursChart hours={byHour} />
@@ -133,7 +176,7 @@ export default function Reports() {
       {payments.length > 0 && (
         <div className="box" style={{ marginTop: 20 }}>
           <h2>How customers paid</h2>
-          <p className="chart-note">Last 30 days</p>
+          <p className="chart-note">{periodLabel}</p>
           <DonutChart
             slices={payments.map((row) => ({
               name: row.name === 'qr' ? 'QR code' : 'Cash',
@@ -143,7 +186,7 @@ export default function Reports() {
         </div>
       )}
 
-      <div className="side-by-side" style={{ marginTop: 20 }}>
+      <div className="side-by-side equal" style={{ marginTop: 20 }}>
         <div className="box" style={{ padding: 0 }}>
           <h2 style={{ padding: '16px 18px 0' }}>Running low</h2>
           <table>
