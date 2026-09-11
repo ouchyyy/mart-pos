@@ -153,19 +153,19 @@ export default function Reports() {
 
         <div className="box">
           <h2>Best sellers</h2>
-          <p className="chart-note">{periodLabel}</p>
-          {/* The whole list, inside a box that scrolls. Cutting it
-              at seven hid the long tail, and letting it grow made
-              the box taller than the one beside it. */}
-          <div className="rank-scroll">
-            <RankChart
-              rows={bestSellers.map((row) => ({
-                label: row.name,
-                amount: row.money,
-                extra: row.sold + ' sold',
-              }))}
-            />
-          </div>
+          <p className="chart-note">
+            Top 5 · {periodLabel.toLowerCase()}
+          </p>
+          {/* Top five only. Past that it stops being "what sells"
+              and becomes a list of everything, which the Movements
+              page already covers. */}
+          <RankChart
+            rows={bestSellers.slice(0, 5).map((row) => ({
+              label: row.name,
+              amount: row.money,
+              extra: row.sold + ' sold',
+            }))}
+          />
         </div>
       </div>
 
