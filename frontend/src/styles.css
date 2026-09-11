@@ -634,10 +634,17 @@ td {
   flex-direction: column;
 }
 
-.side-by-side.equal .donut-wrap,
-.side-by-side.equal .rank-chart {
+.side-by-side.equal .donut-wrap {
   flex: 1;
   justify-content: center;
+}
+
+/* The scrolling box takes the leftover height, and the list
+   inside it keeps its natural size so it can scroll. */
+.side-by-side.equal .rank-scroll {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
 }
 
 /* ---------- small screens ---------- */
@@ -1612,4 +1619,33 @@ td {
    after it swallows the edge. */
 .period-choice button.on + button {
   border-left-color: var(--ink);
+}
+
+/* ---------- best sellers, when the list is long ---------- */
+
+/* The list scrolls inside its box instead of stretching it. Paired
+   with "side-by-side equal", that keeps this box the same height
+   as the donut beside it however many products have sold. */
+.rank-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.rank-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rank-scroll::-webkit-scrollbar-track {
+  background: #eef1f4;
+  border-radius: 4px;
+}
+
+.rank-scroll::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+
+.rank-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--grey);
 }
