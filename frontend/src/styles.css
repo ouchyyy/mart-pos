@@ -619,6 +619,27 @@ td {
   min-width: 300px;
 }
 
+/* Two boxes side by side, both as tall as the taller one. Used
+   where the pair belongs together — a gap under the shorter box
+   looks like something failed to load rather than a deliberate
+   choice. */
+.side-by-side.equal {
+  align-items: stretch;
+}
+
+/* The chart then fills whatever height the row ended up with,
+   instead of sitting at the top of an over-tall box. */
+.side-by-side.equal > .box {
+  display: flex;
+  flex-direction: column;
+}
+
+.side-by-side.equal .donut-wrap,
+.side-by-side.equal .rank-chart {
+  flex: 1;
+  justify-content: center;
+}
+
 /* ---------- small screens ---------- */
 
 /* On a narrow screen the columns stack, and a locked frame would
@@ -1546,4 +1567,49 @@ td {
 .customer-text {
   flex: 1;
   min-width: 0;
+}
+
+/* ---------- the period buttons on Reports ---------- */
+
+.reports-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+/* Three buttons joined into one control, so they read as a single
+   choice rather than three separate actions. */
+.period-choice {
+  display: flex;
+}
+
+.period-choice button {
+  border-radius: 0;
+  border-right-width: 0;
+  font-size: 14px;
+  padding: 7px 14px;
+}
+
+.period-choice button:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.period-choice button:last-child {
+  border-radius: 0 4px 4px 0;
+  border-right-width: 1px;
+}
+
+.period-choice button.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+/* The chosen button needs its own right border back, or the one
+   after it swallows the edge. */
+.period-choice button.on + button {
+  border-left-color: var(--ink);
 }
