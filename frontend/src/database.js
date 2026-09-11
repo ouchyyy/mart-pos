@@ -301,15 +301,15 @@ export async function cancelSale(id, reason) {
 // be slow, and it is much easier to read than a big SQL query.
 // ------------------------------------------------------------
 
-export async function getTodaysSales() {
-  const today = new Date().toISOString().slice(0, 10);
-
+// Completed sales since a date. Used by the report cards, which
+// change what they cover when you pick a different period.
+export async function getSalesSince(fromDate) {
   return check(
     await supabase
       .from('sales')
       .select('*')
       .eq('status', 'completed')
-      .gte('created_at', today)
+      .gte('created_at', fromDate)
   );
 }
 
