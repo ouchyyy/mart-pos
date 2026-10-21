@@ -1,13 +1,4 @@
-// ============================================================
-// HoursChart.jsx — how busy each hour of the day is
-//
-// Twenty-four thin bars. Too many for a value on each one, so
-// hovering shows the number instead and only every third hour
-// is labelled.
-//
-// hours looks like: [{ hour: 0, sales: 0, money: 0 }, ...]
-// ============================================================
-
+//Hours Chart
 import { money } from '../money';
 
 export default function HoursChart({ hours }) {
